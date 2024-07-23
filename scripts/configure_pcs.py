@@ -1,23 +1,25 @@
-from utils.netmiko_connection import create_connection, send_commands, save_configuration, close_connection
+import logging
+from utils.ssh_connection import create_ssh_connection, send_ssh_command, close_ssh_connection
+from config.device_config import devices
 
-def automate_pcs(zone):
-    pcs = {
-        "green": [
-            # Add green zone PCs configurations here
-        ],
-        "yellow": [
-            # Add yellow zone PCs configurations here
-        ]
-    }
+logger = logging.getLogger(__name__)
 
-    for pc in pcs[zone]:
-        connection = create_connection(pc)
-        if connection:
-            output = send_commands(connection, pc['commands'])
-            print(output)
-            save_configuration(connection)
-            close_connection(connection)
+def configure_pcs(zone):
+    """Automate PC configuration for a specified zone."""
+    logger.info(f"Starting PC configuration for {zone} zone")
 
-if __name__ == "__main__":
-    zone = input("Enter zone (green/yellow): ").strip().lower()
-    automate_pcs(zone)
+    for device in devices[zone]:
+        device_ip = device["ip"]
+        config_commands = device["config"]
+
+        try:
+            logger.info(f"Connecting to PC {device_ip}")
+            connection = create_ssh_connection(device_ip)
+            for command in config_commands:
+                send_ssh_command(connection, command)
+            close_ssh_connection(connection)
+            logger.info(f"Configured PC {device_ip}")
+        except Exception as e:
+            logger.error(f"Failed to configure PC {device_ip}: {e}")
+
+    logger.info(f"Completed PC configuration for {zone} zone")

@@ -1,90 +1,109 @@
 import os
+import sys
+import time
+from getpass import getpass
+from utils.logging_config import setup_logging
+from utils.terminal_utils import display_menu, clear_screen
 import scripts.automate_vlans as automate_vlans
 import scripts.configure_devices as configure_devices
 import scripts.configure_pcs as configure_pcs
-from utils.logging_config import setup_logging
-from utils.terminal_utils import clear_screen, display_menu, pause
+import tests.test_connectivity as test_connectivity
 
-def authenticate_user():
-    """Authenticates the user."""
-    expected_username = "279315"
-    expected_password = "2d9!!0B3"
+# Setup logging
+setup_logging()
 
-    clear_terminal()
-    print_output("=== User Authentication ===")
-    username = get_input("Enter username: ")
-    password = get_input("Enter password: ")
+# Authentication function
+def authenticate():
+    clear_screen()
+    print("Authenticate the user")
+    username = input("Enter username: ")
+    password = getpass("Enter password: ")
 
-    if username == expected_username and password == expected_password:
-        print_output("Authentication successful!")
-        logger.info("User authentication successful.")
+    if username == "admin" and password == "automation":
+        print("Authentication successful.")
+        time.sleep(1)
         return True
     else:
-        print_output("Authentication failed. Please try again.")
-        logger.warning("User authentication failed.")
-        return False
+        print("Authentication failed. Exiting...")
+        time.sleep(1)
+        sys.exit(1)
 
-def main_menu():
-    setup_logging()
-    while True:
-        clear_screen()
-        choice = display_menu("Automation Interface", ["Automate VLANs", "Automate Devices", "Exit"])
-
-        if choice == '1':
-            vlan_menu()
-        elif choice == '2':
-            device_menu()
-        elif choice == '3':
-            print("Exiting.")
-            break
-        else:
-            print("Invalid choice. Please try again.")
-
+# VLAN automation menu
 def vlan_menu():
     while True:
-        clear_screen()
-        
-        choice = display_menu("Automate VLANs", ["Green Zone", "Yellow Zone", "Back"])
-
-        if choice == '1':
+        choice = display_menu("Automate VLAN", ["Green Zone", "Yellow Zone", "Back"])
+        if choice == "1":
             automate_vlans.automate_vlans("green")
-        elif choice == '2':
+        elif choice == "2":
             automate_vlans.automate_vlans("yellow")
-        elif choice == '3':
+        elif choice == "3":
             break
         else:
-            print("Invalid choice. Please try again.")
+            print("Invalid choice, please try again.")
+            time.sleep(1)
 
+# Device automation menu
 def device_menu():
     while True:
-        clear_screen()
         choice = display_menu("Automate Devices", ["Green Zone", "Yellow Zone", "Back"])
-
-        if choice == '1':
-            device_zone_menu("green")
-        elif choice == '2':
-            device_zone_menu("yellow")
-        elif choice == '3':
+        if choice == "1":
+            zone_choice = display_menu("Automate Green Zone Devices", ["Automate PCs", "Automate Switches", "Back"])
+            if zone_choice == "1":
+                configure_pcs.configure_pcs("green")
+            elif zone_choice == "2":
+                configure_devices.configure_devices("green")
+            elif zone_choice == "3":
+                break
+            else:
+                print("Invalid choice, please try again.")
+                time.sleep(1)
+        elif choice == "2":
+            zone_choice = display_menu("Automate Yellow Zone Devices", ["Automate PCs", "Automate Switches", "Back"])
+            if zone_choice == "1":
+                configure_pcs.configure_pcs("yellow")
+            elif zone_choice == "2":
+                configure_devices.configure_devices("yellow")
+            elif zone_choice == "3":
+                break
+            else:
+                print("Invalid choice, please try again.")
+                time.sleep(1)
+        elif choice == "3":
             break
         else:
-            print("Invalid choice. Please try again.")
+            print("Invalid choice, please try again.")
+            time.sleep(1)
 
-def device_zone_menu(zone):
+# Connectivity test menu
+def connectivity_menu():
     while True:
-        clear_screen()
-        title = f"Automate {zone.capitalize()} Zone Devices"
-        choice = display_menu(title, ["Automate PCs", "Automate Switches", "Back"])
-
-        if choice == '1':
-            configure_pcs.automate_pcs(zone)
-            pause()
-        elif choice == '2':
-            configure_devices.automate_devices(zone)
-            pause()
-        elif choice == '3':
+        choice = display_menu("Test Connectivity", ["Green Zone", "Yellow Zone", "Back"])
+        if choice == "1":
+            test_connectivity.test_connectivity("green")
+        elif choice == "2":
+            test_connectivity.test_connectivity("yellow")
+        elif choice == "3":
             break
         else:
-            print("Invalid choice. Please try again.")
+            print("Invalid choice, please try again.")
+            time.sleep(1)
+
+# Main menu
+def main_menu():
+    while True:
+        choice = display_menu("Main Menu", ["Automate VLANs", "Automate Devices", "Test Connectivity", "Exit"])
+        if choice == "1":
+            vlan_menu()
+        elif choice == "2":
+            device_menu()
+        elif choice == "3":
+            connectivity_menu()
+        elif choice == "4":
+            sys.exit(0)
+        else:
+            print("Invalid choice, please try again.")
+            time.sleep(1)
 
 if __name__ == "__main__":
+    authenticate()
     main_menu()

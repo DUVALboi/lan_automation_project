@@ -1,13 +1,4 @@
-# utils/__init__.py
-
-# Import functions from individual modules to make them available when the package is imported
-from .logging_config import configure_logging
-from .netmiko_connection import configure_device
-from .ssh_connection import ssh_connect
-
-# Define the list of names to export when from utils import *
-__all__ = [
-    'configure_logging',
-    'configure_device',
-    'ssh_connect'
-]
+from .logging_config import setup_logging
+from .netmiko_connection import create_connection, send_commands, save_configuration, close_connection
+from .ssh_connection import create_ssh_connection, send_ssh_command, close_ssh_connection
+from .terminal_utils import clear_terminal, get_input, print_output, exit_program, display_menu

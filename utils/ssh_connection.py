@@ -3,46 +3,47 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def create_ssh_connection(hostname, username, password):
+def create_ssh_connection(hostname, port, username, password):
+    """Create an SSH connection to the network device."""
     try:
-        logger.info(f"Connecting to {hostname}")
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(hostname, username=username, password=password)
-        logger.info(f"Connected to {hostname}")
-        return client
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(hostname, port=port, username=username, password=password)
+        logger.info(f"Successfully connected to {hostname}")
+        return ssh
     except Exception as e:
         logger.error(f"Failed to connect to {hostname}: {e}")
         return None
 
-def send_ssh_command(client, command):
+def send_ssh_command(ssh, command):
+    """Send a command via SSH to the network device."""
     try:
-        logger.info(f"Sending command to {client.get_transport().getpeername()[0]}")
-        stdin, stdout, stderr = client.exec_command(command)
+        stdin, stdout, stderr = ssh.exec_command(command)
         output = stdout.read().decode()
-        logger.info(f"Command sent to {client.get_transport().getpeername()[0]}")
+        logger.info(f"Successfully sent command to {ssh.get_transport().getpeername()[0]}")
         return output
     except Exception as e:
-        logger.error(f"Failed to send command: {e}")
+        logger.error(f"Failed to execute command on {ssh.get_transport().getpeername()[0]}: {e}")
         return None
 
-def close_ssh_connection(client):
+def close_ssh_connection(ssh):
+    """Close the SSH connection to the network device."""
     try:
-        logger.info(f"Closing connection to {client.get_transport().getpeername()[0]}")
-        client.close()
-        logger.info(f"Connection closed")
+        ssh.close()
+        logger.info(f"Successfully disconnected from {ssh.get_transport().getpeername()[0]}")
     except Exception as e:
-        logger.error(f"Failed to close connection: {e}")
+        logger.error(f"Failed to disconnect from {ssh.get_transport().getpeername()[0]}: {e}")
 
 # Example usage
 if __name__ == "__main__":
-    hostname = "192.168.1.1"
-    username = "admin"
-    password = "password"
-    command = "show running-config"
-    
-    client = create_ssh_connection(hostname, username, password)
-    if client:
-        output = send_ssh_command(client, command)
+    device = {
+        "hostname": "192.168.1.1",
+        "port": 22,
+        "username": "admin",
+        "password": "password"
+    }
+    ssh = create_ssh_connection(device["hostname"], device["port"], device["username"], device["password"])
+    if ssh:
+        output = send_ssh_command(ssh, "show ip interface brief")
         print(output)
-        close_ssh_connection(client)
+        close_ssh_connection(ssh)

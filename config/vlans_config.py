@@ -1,56 +1,12 @@
-vlans = {
-    # VLAN 10: DNS-1, DNS-2, DNS-4
-    # Green: DNS-1, DNS2
-    # Yellow: DNS-4
-
-    10: {
-        'subnet': '192.168.10.0/24',
-        'devices': ['DNS-1', 'DNS-2']
-    },
-
-    110: {
-        'subnet': '192.169.10.0/24',
-        'devices': ['DNS-4']
-    },
-
-    # VLAN 20: PC1, DNS-3, PC3
-    # Green: PC1, DNS-3
-    # Yellow: PC3
-
-    20: {
-        'subnet': '192.168.20.0/24',
-        'devices': ['PC1', 'DNS-3']
-    },
-
-    120: {
-        'subnet': '192.169.20.0/24',
-        'devices': ['PC3']
-    },
-
-    # VLAN 30: PC2, Server_Rack
-    30: {
-        'subnet': '192.169.30.0/24',
-        'devices': ['PC2', 'Server_Rack']
-    },
-
-    # VLAN 40: AAA-1
-    40: {
-        'subnet': '192.168.40.0/24',
-        'devices': ['AAA-1']
-    },
-
-    # VLAN 98: MGMTyellow
-    98: {
-        'subnet': '192.169.99.0/24',
-        'devices': ['MGMTyellow']
-    },
-
-    # VLAN 99: MGMTgreen
-    99: {
-        'subnet': '192.168.99.0/24',
-        'devices': ['MGMTgreen']
-    },
-
-    # Special VLAN
-    101: 'BlackHole'
+"green": [
+        {"id": 10, "name": "VLAN10", "devices": ["192.168.10.1", "192.168.10.2", "192.168.10.3", "192.168.10.4"]},
+        {"id": 20, "name": "VLAN20", "devices": ["192.168.20.1", "192.168.20.2", "192.168.20.3", "192.168.20.4"]},
+        {"id": 99, "name": "MgmtGreen", "devices": ["192.168.99.1", "192.168.99.2", "192.168.99.3", "192.168.99.4"]},
+    ],
+    "yellow": [
+        {"id": 10, "name": "VLAN10", "devices": ["192.169.10.1", "192.169.10.2", "192.169.10.3"]},
+        {"id": 20, "name": "VLAN20", "devices": ["192.169.20.1", "192.169.20.2", "192.169.20.3"]},
+        {"id": 30, "name": "VLAN30", "devices": ["192.169.30.1", "192.169.30.2", "192.169.30.3"]},
+        {"id": 98, "name": "MgmtYellow", "devices": ["192.169.98.1", "192.169.98.2", "192.169.98.3"]},
+    ]
 }

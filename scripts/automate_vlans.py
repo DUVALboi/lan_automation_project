@@ -1,19 +1,27 @@
-from utils.netmiko_connection import configure_device
-from config.device_config import devices
+from utils.netmiko_connection import create_connection, send_commands, save_configuration, close_connection
 from config.vlans_config import vlans
-from utils.logging_config import logger
 
-vlan_commands = []
-for vlan_id, subnet in vlans.items():
-    vlan_commands.append(f'vlan {vlan_id}')
-    vlan_commands.append(f'name VLAN_{vlan_id}')
-    vlan_commands.append('exit')
+def automate_vlans(zone):
+    for vlan in vlans[zone]:
+        for device_ip in vlan['devices']:
+            device = {
+                "device_type": "cisco_ios",
+                "ip": device_ip,
+                "username": "admin",
+                "password": "password",
+                "secret": "secret",
+            }
+            connection = create_connection(device)
+            if connection:
+                commands = [
+                    f"vlan {vlan['id']}",
+                    f"name {vlan['name']}"
+                ]
+                output = send_commands(connection, commands)
+                print(output)
+                save_configuration(connection)
+                close_connection(connection)
 
-def automate_vlans():
-    for device in devices:
-        try:
-            logger.info(f'Automating VLANs on device {device["ip"]}...')
-            configure_device(device['ip'], device['username'], device['password'], vlan_commands)
-            logger.info(f'VLANs on device {device["ip"]} automated successfully.')
-        except Exception as e:
-            logger.error(f'Failed to automate VLANs on device {device["ip"]}: {e}')
+if __name__ == "__main__":
+    zone = input("Enter zone (green/yellow): ").strip().lower()
+    automate_vlans(zone)

@@ -1,12 +1,9 @@
-# main.py
-import getpass
-
-import maskpass
-
-from scripts.configure_devices import configure_devices
-from scripts.automate_vlans import automate_vlans
-from utils.logging_config import configure_logging, logger
-from utils.terminal_utils import clear_terminal, get_input, print_output, exit_program
+import os
+import scripts.automate_vlans as automate_vlans
+import scripts.configure_devices as configure_devices
+import scripts.configure_pcs as configure_pcs
+from utils.logging_config import setup_logging
+from utils.terminal_utils import clear_screen, display_menu, pause
 
 def authenticate_user():
     """Authenticates the user."""
@@ -28,48 +25,66 @@ def authenticate_user():
         return False
 
 def main_menu():
-    """Displays the main menu."""
-    clear_terminal()
-    print_output("=== LAN Automation ===")
-    print_output("1. Configure Devices")
-    print_output("2. Automate VLANs")
-    print_output("3. Exit")
-    choice = get_input("Enter your choice: ")
-    return choice
-
-def main():
-    """Main entry point of the program."""
-    configure_logging()
-    logger = configure_logging()
-
-    authenticated = False
-    while not authenticated:
-        authenticated = authenticate_user()
-
+    setup_logging()
     while True:
-        choice = main_menu()
+        clear_screen()
+        choice = display_menu("Automation Interface", ["Automate VLANs", "Automate Devices", "Exit"])
 
         if choice == '1':
-            clear_terminal()
-            print_output("=== Configure Devices ===")
-            configure_devices()
-            get_input("Press Enter to return to the main menu...")
-
+            vlan_menu()
         elif choice == '2':
-            clear_terminal()
-            print_output("=== Automate VLANs ===")
-            automate_vlans()
-            get_input("Press Enter to return to the main menu...")
-
+            device_menu()
         elif choice == '3':
-            clear_terminal()
-            print_output("Exiting...")
-            logger.info("User exited the program.")
-            exit_program()
-
+            print("Exiting.")
+            break
         else:
-            print_output("Invalid choice. Please try again.")
-            logger.warning("User made an invalid choice.")
+            print("Invalid choice. Please try again.")
+
+def vlan_menu():
+    while True:
+        clear_screen()
+        
+        choice = display_menu("Automate VLANs", ["Green Zone", "Yellow Zone", "Back"])
+
+        if choice == '1':
+            automate_vlans.automate_vlans("green")
+        elif choice == '2':
+            automate_vlans.automate_vlans("yellow")
+        elif choice == '3':
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+def device_menu():
+    while True:
+        clear_screen()
+        choice = display_menu("Automate Devices", ["Green Zone", "Yellow Zone", "Back"])
+
+        if choice == '1':
+            device_zone_menu("green")
+        elif choice == '2':
+            device_zone_menu("yellow")
+        elif choice == '3':
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+def device_zone_menu(zone):
+    while True:
+        clear_screen()
+        title = f"Automate {zone.capitalize()} Zone Devices"
+        choice = display_menu(title, ["Automate PCs", "Automate Switches", "Back"])
+
+        if choice == '1':
+            configure_pcs.automate_pcs(zone)
+            pause()
+        elif choice == '2':
+            configure_devices.automate_devices(zone)
+            pause()
+        elif choice == '3':
+            break
+        else:
+            print("Invalid choice. Please try again.")
 
 if __name__ == "__main__":
-    main()
+    main_menu()

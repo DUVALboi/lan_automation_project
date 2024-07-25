@@ -45,4 +45,6 @@ The automation process logs all activities in the 'logs/automation.log' file for
 
 ## GNS3
 
-- 'http://ensa1-gns3.savnet.ro/static/web-ui/server/1/project/f3585a54-94b6-4c1f-8a44-2940894d2e4b': The code will be stored on 'Server_Rack' and 'AAA-1'.
+- 'http://ensa1-gns3.savnet.ro/static/web-ui/server/1/projects'
+- Open the link and look for 'MariaSebastian_BCThesis'
+- The code is stored in 'AAA-1' in the 'Blue Zone' and in 'Server_Rack' in the 'Yellow Zone'.

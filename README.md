@@ -43,6 +43,11 @@ The automation process logs all activities in the 'logs/automation.log' file for
 - `utils/ssh_connection.py`: Manages SSH connections to devices using Paramiko.
 - `utils/terminal_utils.py`: Provides terminal utility functions for user interaction.
 
+## Tests
+
+- `tests/test_connectivity.py`: Scripts to test network connectivity.
+- `tests/test_vlans.py`: Scripts to test VLAN configurations.
+
 ## GNS3
 
 - 'http://ensa1-gns3.savnet.ro/static/web-ui/server/1/projects'

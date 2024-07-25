@@ -74,22 +74,22 @@ def device_menu():
             print("Invalid choice, please try again.")
             time.sleep(1)
 
-# Connectivity test menu
-def connectivity_menu():
-    while True:
-        choice = display_menu("Test Connectivity", ["Green Zone", "Yellow Zone", "Back"])
-        if choice == "1":
-            test_connectivity.test_connectivity("green")
-        elif choice == "2":
-            test_connectivity.test_connectivity("yellow")
-        elif choice == "3":
-            break
-        else:
-            print("Invalid choice, please try again.")
-            time.sleep(1)
-
 # Main menu
 def main_menu():
+    devices = {
+        "green": [
+            {"device_type": "cisco_ios", "ip": "192.168.99.2", "username": "admin", "password": "password"},
+            {"device_type": "cisco_ios", "ip": "192.168.99.3", "username": "admin", "password": "password"},
+            {"device_type": "cisco_ios", "ip": "192.168.99.4", "username": "admin", "password": "password"},
+            {"device_type": "cisco_ios", "ip": "192.168.99.5", "username": "admin", "password": "password"},
+        ],
+        "yellow": [
+            {"device_type": "cisco_ios", "ip": "192.169.98.1", "username": "admin", "password": "password"},
+            {"device_type": "cisco_ios", "ip": "192.169.98.2", "username": "admin", "password": "password"},
+            {"device_type": "cisco_ios", "ip": "192.169.98.3", "username": "admin", "password": "password"},
+        ]
+    }
+
     while True:
         choice = display_menu("Main Menu", ["Automate VLANs", "Automate Devices", "Test Connectivity", "Exit"])
         if choice == "1":
@@ -97,7 +97,7 @@ def main_menu():
         elif choice == "2":
             device_menu()
         elif choice == "3":
-            connectivity_menu()
+            test_connectivity.test_connectivity(devices)
         elif choice == "4":
             sys.exit(0)
         else:

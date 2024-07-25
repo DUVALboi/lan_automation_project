@@ -1,18 +1,20 @@
-# tests/test_connectivity.py
-
 import logging
+from utils.ssh_connection import create_ssh_connection, send_ssh_command, close_ssh_connection
 
-def test_connectivity():
-    """Function to test network connectivity."""
-    logger = logging.getLogger(__name__)
-    logger.info("Testing network connectivity...")
+def test_connectivity(devices):
+    """Test connectivity to devices."""
+    logger = logging.getLogger("tests.test_connectivity")
+    logger.info("Starting connectivity tests.")
 
-    # Add your connectivity test logic here
-    # For example, pinging a known IP address
+    for zone, device_list in devices.items():
+        logger.info(f"Testing connectivity for {zone} zone.")
+        for device in device_list:
+            try:
+                conn = create_ssh_connection(device)
+                output = send_ssh_command(conn, "ping 8.8.8.8")
+                logger.info(f"Ping output for device {device['ip']}: {output}")
+                close_ssh_connection(conn)
+            except Exception as e:
+                logger.error(f"Failed to connect to device {device['ip']}: {str(e)}")
 
-    success = True  # Placeholder for actual test result
-
-    if success:
-        logger.info("Connectivity test passed.")
-    else:
-        logger.error("Connectivity test failed.")
+    logger.info("Completed connectivity tests.")

@@ -1,1 +1,12 @@
-
+2024-07-24 13:57:10 - tests.test_connectivity - INFO - Starting connectivity tests.
+2024-07-24 13:57:10 - tests.test_connectivity - INFO - Testing connectivity for green zone.
+2024-07-24 13:57:10 - tests.test_connectivity - ERROR - Failed to connect to device 192.168.99.2: create_ssh_connection() missing 3 required positional arguments: 'port', 'username', and 'password'
+2024-07-24 13:57:10 - tests.test_connectivity - ERROR - Failed to connect to device 192.168.99.3: create_ssh_connection() missing 3 required positional arguments: 'port', 'username', and 'password'
+2024-07-24 13:57:10 - tests.test_connectivity - ERROR - Failed to connect to device 192.168.99.4: create_ssh_connection() missing 3 required positional arguments: 'port', 'username', and 'password'
+2024-07-24 13:57:10 - tests.test_connectivity - ERROR - Failed to connect to device 192.168.99.5: create_ssh_connection() missing 3 required positional arguments: 'port', 'username', and 'password'
+2024-07-24 13:57:10 - tests.test_connectivity - INFO - Testing connectivity for yellow zone.
+2024-07-24 13:57:10 - tests.test_connectivity - ERROR - Failed to connect to device 192.169.98.1: create_ssh_connection() missing 3 required positional arguments: 'port', 'username', and 'password'
+2024-07-24 13:57:10 - tests.test_connectivity - ERROR - Failed to connect to device 192.169.98.2: create_ssh_connection() missing 3 required positional arguments: 'port', 'username', and 'password'
+2024-07-24 13:57:10 - tests.test_connectivity - ERROR - Failed to connect to device 192.169.98.3: create_ssh_connection() missing 3 required positional arguments: 'port', 'username', and 'password'
+2024-07-24 13:57:10 - tests.test_connectivity - INFO - Completed connectivity tests.
+2024-07-24 14:05:07 - scripts.configure_pcs - INFO - Starting PC configuration for green zone

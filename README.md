@@ -19,22 +19,23 @@ This project automates the configuration of a Local Area Network (LAN) using Pyt
 2. Install the required libraries:
    ```bash
    pip install -r requirements.txt
+   python3 main.py
 
 ## Usage
 
 Upon running 'main.py', the script prompts the user to log in with the admin credentials.
-After successful authentication, the user can choose from the two options(so far) which are configuring the devices or automating the VLANs.
+After successful authentication, the user can choose from the two options which are configuring the devices or automating the VLANs.
 The automation process logs all activities in the 'logs/automation.log' file for preview and debugging.
 
 ## Configuration Files
 
-- `config/device_config.py`: Contains device configuration details such as IP addresses, authentication information, and commands to be executed on each device.
-- `config/vlans_config.py`: Defines VLAN configurations including VLAN IDs, associated subnets, and devices assigned to each VLAN.
+- `config/device_config.py`: Contains device configuration details such as IP addresses and authentication information.
+- `config/vlans_config.py`: Defines VLAN configurations including VLAN IDs, name, and devices assigned to each VLAN.
 
 ## Scripts
 
 - `scripts/configure_devices.py`: Automates the configuration of network devices using Netmiko.
-- `scripts/automate_vlans.py`: Automates VLAN setup on the network devices.
+- `scripts/automate_vlans.py`: Automates VLAN setup on the network devices(switches).
 
 ## Utilities
 
@@ -43,6 +44,6 @@ The automation process logs all activities in the 'logs/automation.log' file for
 - `utils/ssh_connection.py`: Manages SSH connections to devices using Paramiko.
 - `utils/terminal_utils.py`: Provides terminal utility functions for user interaction.
 
-## Future
+## GNS3
 
-This remains to be implemented inside the GNS3's virtual machine.
+- 'http://ensa1-gns3.savnet.ro/static/web-ui/server/1/project/f3585a54-94b6-4c1f-8a44-2940894d2e4b': The code will be stored on 'Server_Rack' and 'AAA-1'.

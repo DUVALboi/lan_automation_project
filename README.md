@@ -19,7 +19,6 @@ This project automates the configuration of a Local Area Network (LAN) using Pyt
 2. Install the required libraries:
    ```bash
    pip install -r requirements.txt
-   python3 main.py
 
 ## Usage
 

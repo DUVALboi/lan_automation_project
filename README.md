@@ -22,8 +22,11 @@ This project automates the configuration of a Local Area Network (LAN) using Pyt
 
 ## Usage
 
-Upon running 'main.py', the script prompts the user to log in with the admin credentials.
-After successful authentication, the user can choose from the two options which are configuring the devices or automating the VLANs.
+Upon running 'main.py' on the `Server_Rack` PC, the script prompts the user to log in with the admin credentials.
+After successful authentication, the user can choose from the four options which are configuring the devices, automating the VLANs, testing the connectivity or, exiting.
+Chosing either to configure the devices or the VLANs, the admin will be prompted to choose either the Green or Yellow Zones.
+In the Configure the Devices option, after chosing one of the zones, the user will have to chose to configure either the switches or the PCs.
+In the Configure VLANs option, the program will configure the VLAN interfaces on the switches.
 The automation process logs all activities in the 'logs/automation.log' file for preview and debugging.
 
 ## Configuration Files

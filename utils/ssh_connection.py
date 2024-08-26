@@ -1,49 +1,46 @@
-import paramiko
-import logging
+# utils/ssh_connection.py
 
-logger = logging.getLogger(__name__)
+from netmiko import ConnectHandler
 
-def create_ssh_connection(hostname, port, username, password):
-    """Create an SSH connection to the network device."""
-    try:
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(hostname, port=port, username=username, password=password)
-        logger.info(f"Successfully connected to {hostname}")
-        return ssh
-    except Exception as e:
-        logger.error(f"Failed to connect to {hostname}: {e}")
-        return None
+class SSHConnection:
+    def __init__(self, device_params):
+        self.device_params = device_params
+        self.connection = None
 
-def send_ssh_command(ssh, command):
-    """Send a command via SSH to the network device."""
-    try:
-        stdin, stdout, stderr = ssh.exec_command(command)
-        output = stdout.read().decode()
-        logger.info(f"Successfully sent command to {ssh.get_transport().getpeername()[0]}")
-        return output
-    except Exception as e:
-        logger.error(f"Failed to execute command on {ssh.get_transport().getpeername()[0]}: {e}")
-        return None
+    def connect(self):
+        try:
+            self.connection = ConnectHandler(**self.device_params)
+            print(f"Connected to {self.device_params['ip']}")
+        except Exception as e:
+            print(f"Failed to connect to {self.device_params['ip']}: {str(e)}")
 
-def close_ssh_connection(ssh):
-    """Close the SSH connection to the network device."""
-    try:
-        ssh.close()
-        logger.info(f"Successfully disconnected from {ssh.get_transport().getpeername()[0]}")
-    except Exception as e:
-        logger.error(f"Failed to disconnect from {ssh.get_transport().getpeername()[0]}: {e}")
+    def send_command(self, command):
+        if self.connection:
+            return self.connection.send_command(command)
+        else:
+            print("Connection not established.")
 
-# Example usage
-if __name__ == "__main__":
-    device = {
-        "hostname": "192.168.1.1",
-        "port": 22,
-        "username": "admin",
-        "password": "password"
-    }
-    ssh = create_ssh_connection(device["hostname"], device["port"], device["username"], device["password"])
-    if ssh:
-        output = send_ssh_command(ssh, "show ip interface brief")
-        print(output)
-        close_ssh_connection(ssh)
+    def send_config_set(self, config_commands):
+        if self.connection:
+            return self.connection.send_config_set(config_commands)
+        else:
+            print("Connection not established.")
+
+    def disconnect(self):
+        if self.connection:
+            self.connection.disconnect()
+            print(f"Disconnected from {self.device_params['ip']}")
+        else:
+            print("No connection to disconnect.")
+
+# Functions that the script might try to import
+def create_ssh_connection(device_params):
+    ssh_conn = SSHConnection(device_params)
+    ssh_conn.connect()
+    return ssh_conn
+
+def send_ssh_command(ssh_conn, command):
+    return ssh_conn.send_command(command)
+
+def close_ssh_connection(ssh_conn):
+    ssh_conn.disconnect()

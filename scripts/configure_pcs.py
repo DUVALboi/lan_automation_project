@@ -1,25 +1,29 @@
-import logging
-from utils.ssh_connection import create_ssh_connection, send_ssh_command, close_ssh_connection
+# configure_pcs.py
+
+from utils.ssh_connection import SSHConnection
 from config.device_config import devices
 
-logger = logging.getLogger(__name__)
+def assign_device_ips():
+    print("\nAssigning IP addresses to end devices...")
 
-def configure_pcs(zone):
-    """Automate PC configuration for a specified zone."""
-    logger.info(f"Starting PC configuration for {zone} zone")
+    # This is a placeholder for actual DHCP or manual IP assignment logic.
+    # Depending on your environment, you'd automate DHCP server configuration or manually assign IPs.
+    
+    # For demonstration, this simply prints out a message.
+    for device_name, device_info in devices.items():
+        print(f"Assigning IP to devices connected to {device_name}...")
+        connection = SSHConnection(device_info)
+        
+        # Placeholder logic to configure DHCP on the device (example)
+        dhcp_commands = [
+            "ip dhcp excluded-address 192.168.10.1 192.168.10.10",
+            "ip dhcp pool VLAN10",
+            "network 192.168.10.0 255.255.255.0",
+            "default-router 192.168.10.1",
+            "lease 7"
+        ]
+        
+        connection.send_config_commands(dhcp_commands)
+    
+    print("IP addresses have been assigned.")
 
-    for device in devices[zone]:
-        device_ip = device["ip"]
-        config_commands = device["config"]
-
-        try:
-            logger.info(f"Connecting to PC {device_ip}")
-            connection = create_ssh_connection(device_ip)
-            for command in config_commands:
-                send_ssh_command(connection, command)
-            close_ssh_connection(connection)
-            logger.info(f"Configured PC {device_ip}")
-        except Exception as e:
-            logger.error(f"Failed to configure PC {device_ip}: {e}")
-
-    logger.info(f"Completed PC configuration for {zone} zone")
